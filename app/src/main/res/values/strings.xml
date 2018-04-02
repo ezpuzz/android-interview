@@ -1,3 +1,8 @@
 <resources>
-  <string name="app_name">TvMovie</string>
+    <string name="app_name">TMDb Search</string>
+    <string name="title_activity_scrolling">TMDb Search</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search........</string>
+    <string name="search_hint">Infinity War</string>
+    <string name="search_title">Search</string>
 </resources>
