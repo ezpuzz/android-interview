@@ -2,24 +2,26 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <ImageView
-        android:id="@+id/movie_poster"
+        android:id="@+id/series_poster"
         android:layout_width="184dp"
         android:layout_height="234dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/movie_year"
+        app:layout_constraintBottom_toTopOf="@+id/series_first_air_date"
         app:layout_constraintDimensionRatio="27:40"
-        app:layout_constraintEnd_toStartOf="@+id/movie_title"
+        app:layout_constraintEnd_toStartOf="@+id/series_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/series_poster_image_description" />
 
     <TextView
-        android:id="@+id/movie_title"
+        android:id="@+id/series_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -27,40 +29,38 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:paddingEnd="15dp"
-        android:text="Title"
+        android:paddingStart="15dp"
         android:textAppearance="@android:style/TextAppearance.Material.Headline"
-        app:layout_constraintBottom_toTopOf="@+id/movie_description"
+        app:layout_constraintBottom_toTopOf="@+id/series_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/movie_poster"
+        app:layout_constraintStart_toEndOf="@+id/series_poster"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/movie_year"
+        android:id="@+id/series_first_air_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Year"
         android:textAppearance="@android:style/TextAppearance.Material.Display1"
-        app:layout_constraintEnd_toStartOf="@+id/movie_title"
+        app:layout_constraintEnd_toStartOf="@+id/series_title"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/movie_poster" />
+        app:layout_constraintTop_toBottomOf="@+id/series_poster" />
 
     <TextView
-        android:id="@+id/movie_description"
+        android:id="@+id/series_description"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
         android:textAppearance="@android:style/TextAppearance.Material.Body1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/movie_poster"
-        app:layout_constraintTop_toBottomOf="@+id/movie_title" />
+        app:layout_constraintStart_toEndOf="@+id/series_poster"
+        app:layout_constraintTop_toBottomOf="@+id/series_title" />
 
 </android.support.constraint.ConstraintLayout>

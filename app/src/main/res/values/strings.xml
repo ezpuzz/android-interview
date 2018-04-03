@@ -5,4 +5,5 @@
     <string name="action_search">Search........</string>
     <string name="search_hint">Infinity War</string>
     <string name="search_title">Search</string>
+    <string name="series_poster_image_description">Series Poster Image</string>
 </resources>

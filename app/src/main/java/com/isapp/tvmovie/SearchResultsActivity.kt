@@ -4,9 +4,12 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_SEARCH
+import android.media.tv.TvView
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.View
@@ -22,6 +25,8 @@ import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_searching.*
+import kotlinx.android.synthetic.main.movie_item.view.*
+import kotlinx.android.synthetic.main.tv_show_item.view.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -80,7 +85,25 @@ class SearchResultsActivity : AppCompatActivity() {
         }
     }
 
-    data class ViewHolder(val title: TextView, val year: TextView, val poster: ImageView, val desc: TextView)
+    val POSTER_SERVER: String = "https://image.tmdb.org/t/p/original"
+
+    inner class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        fun bindData(movie: MovieDb) {
+            itemView.movie_title.text = movie.title
+            itemView.movie_year.text = movie.releaseDate
+            itemView.movie_description.text = movie.overview
+            Picasso.get().load(POSTER_SERVER + movie.posterPath).into(itemView.movie_poster)
+        }
+    }
+
+    inner class TvViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        fun bindData(show: TvSeries) {
+            itemView.series_title.text = show.originalName
+            itemView.series_first_air_date.text = show.firstAirDate
+            itemView.series_description.text = show.overview
+            Picasso.get().load(POSTER_SERVER + show.posterPath).into(itemView.series_poster)
+        }
+    }
 
     inner class SearchResultsTask : AsyncTask<String?, Int, List<Multi>>() {
         override fun doInBackground(vararg params: String?): List<Multi> {
@@ -92,68 +115,44 @@ class SearchResultsActivity : AppCompatActivity() {
         }
 
         override fun onPostExecute(results: List<Multi>) {
-            val resultsAdapter = object : BaseAdapter() {
-                override fun getItem(position: Int): Multi {
-                    return results[position]
+            val resultsAdapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+                    val view = layoutInflater.inflate(viewType, parent, false)
+                    return when(viewType) {
+                        R.layout.movie_item -> MovieViewHolder(view)
+                        R.layout.tv_show_item -> TvViewHolder(view)
+                        else -> MovieViewHolder(view)
+                    }
                 }
 
-                override fun getItemId(position: Int): Long {
-                    return position.toLong()
-                }
-
-                override fun getCount(): Int {
+                override fun getItemCount(): Int {
                     return results.count()
                 }
 
-
-                override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                    val layout = convertView
-                            ?: layoutInflater.inflate(when (getItemViewType(position)) {
-                                0 -> R.layout.movie_item
-                                1 -> R.layout.movie_item
-                                else -> R.layout.movie_item
-                            }, parent, false)
-
-                    if (layout.tag == null) {
-                        layout.tag = ViewHolder(layout.findViewById(R.id.movie_title), layout.findViewById(R.id.movie_year), layout.findViewById(R.id.movie_poster), layout.findViewById(R.id.movie_description))
-                    }
-
-                    val holder = layout.tag as ViewHolder
-
-                    val item = getItem(position)
+                override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+                    val item = results[position]
 
                     when(item) {
-                        is MovieDb -> {
-                            holder.title.text = item.title
-                            holder.year.text = item.releaseDate
-                            holder.desc.text = item.overview
-                            Picasso.get().load(item?.posterPath).into(holder.poster)
-                        }
-                        is TvSeries -> {
-                            holder.title.text = item.originalName
-                            holder.year.text = item.firstAirDate
-                            holder.desc.text = item.overview
-                            Picasso.get().load(item?.posterPath).into(holder.poster)
-                        }
+                        is MovieDb -> (holder as MovieViewHolder).bindData(item)
+                        is TvSeries -> (holder as TvViewHolder).bindData(item)
                     }
-
-                    return layout
-                }
-
-                override fun getViewTypeCount(): Int {
-                    return 2
                 }
 
                 override fun getItemViewType(position: Int): Int {
-                    return when (getItem(position).mediaType) {
-                        Multi.MediaType.MOVIE -> 0
-                        Multi.MediaType.TV_SERIES -> 1
+                    return when (results[position].mediaType) {
+                        Multi.MediaType.MOVIE -> R.layout.movie_item
+                        Multi.MediaType.TV_SERIES -> R.layout.tv_show_item
                         else -> Adapter.IGNORE_ITEM_VIEW_TYPE
                     }
                 }
             }
 
-            findViewById<ListView>(R.id.search_results).adapter = resultsAdapter
+            findViewById<RecyclerView>(R.id.search_results).apply {
+                isNestedScrollingEnabled = false
+                layoutManager = LinearLayoutManager(applicationContext)
+                adapter = resultsAdapter
+            }
         }
     }
 }
