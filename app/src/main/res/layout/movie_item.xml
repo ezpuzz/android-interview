@@ -1,38 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/movie_poster"
-        android:layout_width="184dp"
-        android:layout_height="234dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="140dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/movie_year"
+        android:contentDescription="@string/movie_or_tv_poster"
+        android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="27:40"
-        app:layout_constraintEnd_toStartOf="@+id/movie_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/movie_title" />
+
+    <ProgressBar
+        android:id="@+id/movie_poster_progress"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/movie_poster"
+        app:layout_constraintDimensionRatio="27:40"
+        app:layout_constraintEnd_toEndOf="@+id/movie_poster"
+        app:layout_constraintStart_toStartOf="@+id/movie_poster"
+        app:layout_constraintTop_toTopOf="@+id/movie_poster"
+        tools:visibility="gone" />
+
 
     <TextView
         android:id="@+id/movie_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:paddingEnd="15dp"
-        android:text="Title"
+        android:background="@android:color/holo_blue_light"
+        android:padding="8dp"
         android:textAppearance="@android:style/TextAppearance.Material.Headline"
-        app:layout_constraintBottom_toTopOf="@+id/movie_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/movie_poster"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="The Walking Pacific Rim" />
 
     <TextView
         android:id="@+id/movie_year"
@@ -41,26 +49,44 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Year"
-        android:textAppearance="@android:style/TextAppearance.Material.Display1"
-        app:layout_constraintEnd_toStartOf="@+id/movie_title"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:textAlignment="viewStart"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        app:layout_constraintEnd_toStartOf="@+id/movie_description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/movie_poster" />
+        app:layout_constraintTop_toBottomOf="@id/movie_poster"
+        tools:text="2018-04-03" />
 
     <TextView
         android:id="@+id/movie_description"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:layout_marginStart="16dp"
         android:textAppearance="@android:style/TextAppearance.Material.Body1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/movie_poster"
-        app:layout_constraintTop_toBottomOf="@+id/movie_title" />
+        app:layout_constraintTop_toTopOf="@+id/movie_poster"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="  It has been ten years since The Battle of the Breach and the oceans are still, but restless. Vindicated by the victory at the Breach, the Jaeger program has evolved into the most powerful global defense force in human history. The PPDC now calls upon the best and brightest to rise up and become the next generation of heroes when the Kaiju threat returns. \n\n
+Sheriff's deputy Rick Grimes awakens from a coma to find a post-apocalyptic world dominated by flesh-eating zombies. He sets out to find his family and encounters many other survivors along the way.
+" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="108dp"
+        android:layout_marginTop="180dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:elevation="4dp"
+        app:fabSize="mini"
+        app:layout_constraintStart_toStartOf="@+id/movie_poster"
+        app:layout_constraintTop_toTopOf="@+id/movie_poster"
+        app:srcCompat="@drawable/ic_info_white_24dp" />
+
 
 </android.support.constraint.ConstraintLayout>
+

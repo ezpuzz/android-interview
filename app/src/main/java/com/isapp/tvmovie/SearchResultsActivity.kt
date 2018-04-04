@@ -11,10 +11,12 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import info.movito.themoviedbapi.TmdbApi
 import info.movito.themoviedbapi.TmdbSearch
@@ -27,6 +29,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_searching.*
 import kotlinx.android.synthetic.main.movie_item.view.*
 import kotlinx.android.synthetic.main.tv_show_item.view.*
+import java.lang.Exception
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -68,7 +71,7 @@ class SearchResultsActivity : AppCompatActivity() {
             }
             searchView.setOnQueryTextListener(listener)
         })
-                .debounce(350L, TimeUnit.MILLISECONDS)
+                .debounce(550L, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { query ->
@@ -87,21 +90,37 @@ class SearchResultsActivity : AppCompatActivity() {
 
     val POSTER_SERVER: String = "https://image.tmdb.org/t/p/original"
 
-    inner class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindData(movie: MovieDb) {
             itemView.movie_title.text = movie.title
             itemView.movie_year.text = movie.releaseDate
             itemView.movie_description.text = movie.overview
-            Picasso.get().load(POSTER_SERVER + movie.posterPath).into(itemView.movie_poster)
+            Picasso.get().load(POSTER_SERVER + movie.posterPath).into(itemView.movie_poster, object: Callback {
+                override fun onError(e: Exception?) {
+                    Log.d("TMDBSearch", "Could not load poster!", e)
+                }
+
+                override fun onSuccess() {
+                    itemView.movie_poster_progress.visibility = View.GONE
+                }
+            })
         }
     }
 
     inner class TvViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bindData(show: TvSeries) {
-            itemView.series_title.text = show.originalName
-            itemView.series_first_air_date.text = show.firstAirDate
-            itemView.series_description.text = show.overview
-            Picasso.get().load(POSTER_SERVER + show.posterPath).into(itemView.series_poster)
+            itemView.tv_show_title.text = show.originalName
+            itemView.tv_show_year.text = show.firstAirDate
+            itemView.tv_show_description.text = show.overview
+            Picasso.get().load(POSTER_SERVER + show.posterPath).into(itemView.tv_show_poster, object: Callback {
+                override fun onError(e: Exception?) {
+                    Log.d("TMDBSearch", "Could not load poster!", e)
+                }
+
+                override fun onSuccess() {
+                    itemView.tv_show_poster_progress.visibility = View.GONE
+                }
+            })
         }
     }
 
@@ -149,7 +168,6 @@ class SearchResultsActivity : AppCompatActivity() {
             }
 
             findViewById<RecyclerView>(R.id.search_results).apply {
-                isNestedScrollingEnabled = false
                 layoutManager = LinearLayoutManager(applicationContext)
                 adapter = resultsAdapter
             }
