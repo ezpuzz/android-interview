@@ -63,20 +63,6 @@
         app:srcCompat="@drawable/ic_movie_24dp" />
 
     <TextView
-        android:id="@+id/movie_year"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textAlignment="viewStart"
-        android:textAppearance="@android:style/TextAppearance.Material.Large"
-        app:layout_constraintEnd_toStartOf="@+id/movie_description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/movie_poster"
-        tools:text="2018-04-03" />
-
-    <TextView
         android:id="@+id/movie_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -94,7 +80,7 @@ Sheriff's deputy Rick Grimes awakens from a coma to find a post-apocalyptic worl
 " />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/zoom_movie_poster_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="108dp"
@@ -105,7 +91,8 @@ Sheriff's deputy Rick Grimes awakens from a coma to find a post-apocalyptic worl
         app:fabSize="mini"
         app:layout_constraintStart_toStartOf="@+id/movie_poster"
         app:layout_constraintTop_toTopOf="@+id/movie_poster"
-        app:srcCompat="@drawable/ic_info_white_24dp" />
+        app:srcCompat="@drawable/ic_zoom_in_24dp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/textView"

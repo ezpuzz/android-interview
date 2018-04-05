@@ -4,7 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_SEARCH
-import android.media.tv.TvView
+import android.graphics.drawable.BitmapDrawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -12,10 +12,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Adapter
+import android.widget.FrameLayout
+import android.widget.ImageView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import info.movito.themoviedbapi.TmdbApi
@@ -93,34 +96,72 @@ class SearchResultsActivity : AppCompatActivity() {
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindData(movie: MovieDb) {
             itemView.movie_title.text = movie.title
-            itemView.movie_year.text = movie.releaseDate
             itemView.movie_description.text = movie.overview
-            Picasso.get().load(POSTER_SERVER + movie.posterPath).into(itemView.movie_poster, object: Callback {
-                override fun onError(e: Exception?) {
-                    Log.d("TMDBSearch", "Could not load poster!", e)
+            Picasso.get()
+                    .load(POSTER_SERVER + movie.posterPath)
+                    .into(itemView.movie_poster, object : Callback {
+                        override fun onError(e: Exception?) {
+                            Log.d("TMDBSearch", "Could not load poster!", e)
+                            itemView.zoom_movie_poster_button.visibility = View.GONE
+                            itemView.movie_poster_progress.visibility = View.GONE
+                            itemView.movie_poster.setImageDrawable(getDrawable(R.drawable.ic_sentiment_very_dissatisfied_24dp))
+                        }
+
+                        override fun onSuccess() {
+                            itemView.movie_poster_progress.visibility = View.GONE
+                            itemView.zoom_movie_poster_button.visibility = View.VISIBLE
+                        }
+                    })
+
+            itemView.zoom_movie_poster_button.setOnClickListener {
+                // stretch poster to full screen but keep aspect ratio
+                val expandedPosterView = ImageView(applicationContext)
+                expandedPosterView.setImageBitmap((itemView.movie_poster.drawable as BitmapDrawable).bitmap)
+                expandedPosterView.adjustViewBounds = true
+                expandedPosterView.scaleType = ImageView.ScaleType.FIT_CENTER
+                expandedPosterView.setOnClickListener {
+                    it.visibility = View.GONE
+                    (it.parent as FrameLayout).removeView(it)
                 }
 
-                override fun onSuccess() {
-                    itemView.movie_poster_progress.visibility = View.GONE
-                }
-            })
+                findViewById<FrameLayout>(android.R.id.content).addView(expandedPosterView, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
+            }
         }
     }
 
-    inner class TvViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class TvViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindData(show: TvSeries) {
             itemView.tv_show_title.text = show.originalName
-            itemView.tv_show_year.text = show.firstAirDate
             itemView.tv_show_description.text = show.overview
-            Picasso.get().load(POSTER_SERVER + show.posterPath).into(itemView.tv_show_poster, object: Callback {
-                override fun onError(e: Exception?) {
-                    Log.d("TMDBSearch", "Could not load poster!", e)
+            Picasso.get()
+                    .load(POSTER_SERVER + show.posterPath)
+                    .into(itemView.tv_show_poster, object : Callback {
+                        override fun onError(e: Exception?) {
+                            Log.d("TMDBSearch", "Could not load poster!", e)
+                            itemView.zoom_tv_show_poster_button.visibility = View.GONE
+                            itemView.tv_show_poster_progress.visibility = View.GONE
+                            itemView.tv_show_poster.setImageDrawable(getDrawable(R.drawable.ic_sentiment_very_dissatisfied_24dp))
+                        }
+
+                        override fun onSuccess() {
+                            itemView.tv_show_poster_progress.visibility = View.GONE
+                            itemView.zoom_tv_show_poster_button.visibility = View.VISIBLE
+                        }
+                    })
+
+            itemView.zoom_tv_show_poster_button.setOnClickListener {
+                // stretch poster to full screen but keep aspect ratio
+                val expandedPosterView = ImageView(applicationContext)
+                expandedPosterView.setImageBitmap((itemView.tv_show_poster.drawable as BitmapDrawable).bitmap)
+                expandedPosterView.adjustViewBounds = true
+                expandedPosterView.scaleType = ImageView.ScaleType.FIT_CENTER
+                expandedPosterView.setOnClickListener {
+                    it.visibility = View.GONE
+                    (it.parent as FrameLayout).removeView(it)
                 }
 
-                override fun onSuccess() {
-                    itemView.tv_show_poster_progress.visibility = View.GONE
-                }
-            })
+                findViewById<FrameLayout>(android.R.id.content).addView(expandedPosterView, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
+            }
         }
     }
 
@@ -130,7 +171,7 @@ class SearchResultsActivity : AppCompatActivity() {
             return searchApi
                     .searchMulti(params.first(), Locale.getDefault().language, 1)
                     .results
-                    .filter { it.mediaType == Multi.MediaType.TV_SERIES || it.mediaType == Multi.MediaType.MOVIE}
+                    .filter { it.mediaType == Multi.MediaType.TV_SERIES || it.mediaType == Multi.MediaType.MOVIE }
         }
 
         override fun onPostExecute(results: List<Multi>) {
@@ -138,7 +179,7 @@ class SearchResultsActivity : AppCompatActivity() {
 
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
                     val view = layoutInflater.inflate(viewType, parent, false)
-                    return when(viewType) {
+                    return when (viewType) {
                         R.layout.movie_item -> MovieViewHolder(view)
                         R.layout.tv_show_item -> TvViewHolder(view)
                         else -> MovieViewHolder(view)
@@ -152,7 +193,7 @@ class SearchResultsActivity : AppCompatActivity() {
                 override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
                     val item = results[position]
 
-                    when(item) {
+                    when (item) {
                         is MovieDb -> (holder as MovieViewHolder).bindData(item)
                         is TvSeries -> (holder as TvViewHolder).bindData(item)
                     }
