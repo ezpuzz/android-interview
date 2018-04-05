@@ -15,7 +15,8 @@
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="27:40"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/movie_title" />
+        app:layout_constraintTop_toBottomOf="@id/movie_title"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
 
     <ProgressBar
         android:id="@+id/movie_poster_progress"
@@ -33,14 +34,33 @@
         android:id="@+id/movie_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@android:color/holo_blue_light"
         android:padding="8dp"
         android:textAppearance="@android:style/TextAppearance.Material.Headline"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/media_type"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="The Walking Pacific Rim" />
+
+    <ImageView
+        android:id="@+id/media_type"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/holo_blue_light"
+        android:contentDescription="movie"
+        android:padding="3dp"
+        android:scaleType="matrix"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/movie_poster"
+        app:layout_constraintLeft_toRightOf="@id/movie_title"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_movie_24dp" />
 
     <TextView
         android:id="@+id/movie_year"
@@ -86,6 +106,19 @@ Sheriff's deputy Rick Grimes awakens from a coma to find a post-apocalyptic worl
         app:layout_constraintStart_toStartOf="@+id/movie_poster"
         app:layout_constraintTop_toTopOf="@+id/movie_poster"
         app:srcCompat="@drawable/ic_info_white_24dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Movie"
+        android:textAppearance="@android:style/TextAppearance.Material.Caption"
+        android:textColor="@android:color/background_light"
+        app:layout_constraintEnd_toEndOf="@+id/media_type"
+        app:layout_constraintTop_toTopOf="@+id/media_type"
+        tools:text="Movie" />
 
 
 </android.support.constraint.ConstraintLayout>
